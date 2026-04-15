@@ -16,9 +16,12 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import java.awt.Dimension;
 import javax.swing.JRadioButton;
+import javax.swing.SwingConstants;
+import javax.swing.JButton;
 
 public class Window extends JFrame {
 
@@ -57,16 +60,18 @@ public class Window extends JFrame {
 		contentPane.add(panel, BorderLayout.WEST);
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[]{30, 0};
-		gbl_panel.rowHeights = new int[]{0, 0, 22, 0, 0, 0, 0, 0, 0};
+		gbl_panel.rowHeights = new int[]{0, 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_panel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
+		
+		ButtonGroup stuff = new ButtonGroup();
 		
 		JLabel origin = new JLabel("Origin");
 		GridBagConstraints gbc_Origin = new GridBagConstraints();
 		gbc_Origin.insets = new Insets(0, 0, 5, 0);
 		gbc_Origin.gridx = 0;
-		gbc_Origin.gridy = 1;
+		gbc_Origin.gridy = 6;
 		panel.add(origin, gbc_Origin);
 		
 		JComboBox comboBox = new JComboBox();
@@ -74,14 +79,14 @@ public class Window extends JFrame {
 		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
 		gbc_comboBox.insets = new Insets(0, 0, 5, 0);
 		gbc_comboBox.gridx = 0;
-		gbc_comboBox.gridy = 2;
+		gbc_comboBox.gridy = 7;
 		panel.add(comboBox, gbc_comboBox);
 		
 		JLabel destination = new JLabel("Destination");
 		GridBagConstraints gbc_destination = new GridBagConstraints();
 		gbc_destination.insets = new Insets(0, 0, 5, 0);
 		gbc_destination.gridx = 0;
-		gbc_destination.gridy = 4;
+		gbc_destination.gridy = 9;
 		panel.add(destination, gbc_destination);
 		
 		JComboBox comboBox_1 = new JComboBox();
@@ -89,34 +94,35 @@ public class Window extends JFrame {
 		gbc_comboBox_1.insets = new Insets(0, 0, 5, 0);
 		gbc_comboBox_1.fill = GridBagConstraints.HORIZONTAL;
 		gbc_comboBox_1.gridx = 0;
-		gbc_comboBox_1.gridy = 5;
+		gbc_comboBox_1.gridy = 10;
 		panel.add(comboBox_1, gbc_comboBox_1);
 		
 		JRadioButton rdbtnNewRadioButton = new JRadioButton("Least Connections");
 		GridBagConstraints gbc_rdbtnNewRadioButton = new GridBagConstraints();
+		gbc_rdbtnNewRadioButton.insets = new Insets(0, 0, 5, 0);
 		gbc_rdbtnNewRadioButton.gridx = 0;
-		gbc_rdbtnNewRadioButton.gridy = 7;
+		gbc_rdbtnNewRadioButton.gridy = 12;
 		panel.add(rdbtnNewRadioButton, gbc_rdbtnNewRadioButton);
+		stuff.add(rdbtnNewRadioButton);
 		
-		JLabel imgLabel = new JLabel("New label");
+		JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("Cheapest Route");
+		GridBagConstraints gbc_rdbtnNewRadioButton_1 = new GridBagConstraints();
+		gbc_rdbtnNewRadioButton_1.insets = new Insets(0, 0, 5, 0);
+		gbc_rdbtnNewRadioButton_1.gridx = 0;
+		gbc_rdbtnNewRadioButton_1.gridy = 13;
+		panel.add(rdbtnNewRadioButton_1, gbc_rdbtnNewRadioButton_1);
+		stuff.add(rdbtnNewRadioButton_1);
 		
+		JButton btnBook = new JButton("Book");
+		GridBagConstraints gbc_btnBook = new GridBagConstraints();
+		gbc_btnBook.gridx = 0;
+		gbc_btnBook.gridy = 18;
+		panel.add(btnBook, gbc_btnBook);
 		
-		
-		/*ImageIcon usaIcon = new ImageIcon("/airportRoute/Resources/usa.png");
-		Image scaledImage = usaIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
-		Image img = usaIcon.getImage();
-		Image imgScale = img.getScaledInstance(getWidth(), getHeight(), Image.SCALE_DEFAULT);
-		ImageIcon scaledIcon = new ImageIcon(imgScale);
-		imgLabel.setIcon(scaledIcon);
-		*/
-		
-		
-		JLabel unitedStates = new JLabel("unitedStates");
-//		unitedStates.setSize(1,1);
-//		unitedStates.setIcon(new ImageIcon(Window.class.getResource("/airportRoute/Resources/usa.png")));
+		JLabel unitedStates = new JLabel();
 		ImageIcon usaIcon = new ImageIcon(Window.class.getResource("/airportRoute/Resources/usa.png"));
 																//width, height
-		Image scaledImage = usaIcon.getImage().getScaledInstance(800, 600, Image.SCALE_SMOOTH);
+		Image scaledImage = usaIcon.getImage().getScaledInstance(800, 500, Image.SCALE_SMOOTH);
 		unitedStates.setIcon((new ImageIcon(scaledImage)));
 		contentPane.add(unitedStates, BorderLayout.CENTER);
 	}
