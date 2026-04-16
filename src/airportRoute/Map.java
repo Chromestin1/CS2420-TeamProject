@@ -20,7 +20,7 @@ public class Map {
 	 * Map represents the map for the project
 	 */
 	public Map() {
-		this.map = new EdgeWeightedGraph(new In("src/graphInternet/Resources/GraphInternet.txt"));
+		this.map = new EdgeWeightedGraph(new In("src/airportRoute/Resources/Airports.txt"));
 	}
 	
 	/**
