@@ -15,7 +15,6 @@ import edu.princeton.cs.algs4.In;
 public class Map {
 	private EdgeWeightedGraph map;
 	
-	
 	/**
 	 * Map represents the map for the project
 	 */
