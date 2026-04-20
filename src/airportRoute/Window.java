@@ -25,6 +25,9 @@ public class Window extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private static JRadioButton cheapest;
+	private Map airportMap;
+	private JComboBox<Airport> originComboBox;
+	private JComboBox<Airport> destinationComboBox;
 
 	/**
 	 * Launch the application.
@@ -62,14 +65,17 @@ public class Window extends JFrame {
 		Airport.display(contentPane);
 		*/
 		
-		display(contentPane);	
+		display(contentPane);
+		loadAirports();
+		
+		
 	}
 
 	private void display(JPanel contentPane2) {
 		JPanel southPanel = new JPanel();
 		contentPane.add(southPanel, BorderLayout.SOUTH);
 		
-		JLabel displayRoute = new JLabel("This Work Some Day");
+		JLabel displayRoute = new JLabel("Display something");
 		displayRoute.setBackground(new Color(255, 255, 255));
 		southPanel.add(displayRoute);
 		
@@ -91,13 +97,14 @@ public class Window extends JFrame {
 		gbc_originText.gridy = 6;
 		controlPanel.add(originText, gbc_originText);
 		
-		JComboBox<?> origin = new JComboBox<>();
+		//JComboBox<?> origin = new JComboBox<>();
+		originComboBox = new JComboBox<Airport>();
 		GridBagConstraints gbc_origin = new GridBagConstraints();
 		gbc_origin.fill = GridBagConstraints.HORIZONTAL;
 		gbc_origin.insets = new Insets(0, 0, 5, 0);
 		gbc_origin.gridx = 0;
 		gbc_origin.gridy = 7;
-		controlPanel.add(origin, gbc_origin);
+		controlPanel.add(originComboBox, gbc_origin);
 		
 		JLabel destinationText = new JLabel("Destination");
 		GridBagConstraints gbc_destinationText = new GridBagConstraints();
@@ -148,4 +155,18 @@ public class Window extends JFrame {
 		unitedStates.setIcon((new ImageIcon(scaledImage)));
 		contentPane.add(unitedStates, BorderLayout.CENTER);
 	}
+	
+	
+	/*
+	 * Loads airport choices into the combo boxes
+	 */
+	private void loadAirports() {
+		for (Airport a : airportMap.getAirports()) {
+			originComboBox.addItem(a);
+			destinationComboBox.addItem(a);
+		}
+	}
+	
+	
+	
 }
