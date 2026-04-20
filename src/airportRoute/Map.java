@@ -1,5 +1,7 @@
 package airportRoute;
 
+import java.util.ArrayList;
+
 import edu.princeton.cs.algs4.BreadthFirstPaths;
 import edu.princeton.cs.algs4.DijkstraUndirectedSP;
 import edu.princeton.cs.algs4.Edge;
@@ -14,12 +16,16 @@ import edu.princeton.cs.algs4.In;
  */
 public class Map {
 	private EdgeWeightedGraph map;
+	private int size;
+	ArrayList<Airport> airports;
+	
 	
 	/**
 	 * Map represents the map for the project
 	 */
 	public Map() {
 		this.map = new EdgeWeightedGraph(new In("src/airportRoute/Resources/Airports.txt"));
+		//this.size = size;
 	}
 	
 	/**
@@ -59,16 +65,19 @@ public class Map {
 	 * @return the airport coordinates
 	 */
 	public int coordinates(int x, int y) {
-		return 0;
+		return x * 1000 + y;
 	}
 	
-	/**
-	 * main is out test method for map
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		Map map = new Map();
-		
+	
+	public int getSize() {
+		return size;
 	}
+	
+	/*
+	 * 
+	 */
+	public ArrayList<Airport> getAirports() {
+		return airports;
+	}
+	
 }
