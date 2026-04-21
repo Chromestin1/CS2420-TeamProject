@@ -30,7 +30,7 @@ public class Window extends JFrame {
 	private JRadioButton cheapest;
 	private JRadioButton leastConnections;
 	
-	private Map airportMap;
+	private Map airportMap = new Map("src/airportRoute/Resources/Airports.txt");
 	private JComboBox<Airport> originComboBox;
 	private JComboBox<Airport> destinationComboBox;
 	
@@ -160,7 +160,7 @@ public class Window extends JFrame {
 		
 		//Button
 		btnBook = new JButton("Book");
-		btnBook.setEnabled(false);
+		btnBook.setEnabled(true);
 		GridBagConstraints gbc_btnBook = new GridBagConstraints();
 		gbc_btnBook.gridx = 0;
 		gbc_btnBook.gridy = 18;
@@ -173,12 +173,12 @@ public class Window extends JFrame {
 		unitedStates.setIcon((new ImageIcon(scaledImage)));
 		contentPane.add(unitedStates, BorderLayout.CENTER);
 		
-		Map airportMap = new Map("src/airportRoute/Resources/Airports.txt");
+		//Map airportMap = new Map("src/airportRoute/Resources/Airports.txt");
 		
-		for (Airport airport : airportMap.getAirports()) {
-			originComboBox.addItem(airport);
-			destinationComboBox.addItem(airport);
-		}
+		//for (Airport airport : airportMap.getAirports()) {
+		//	originComboBox.addItem(airport);
+		//	destinationComboBox.addItem(airport);
+		//}
 		
 	}
 	
@@ -187,10 +187,19 @@ public class Window extends JFrame {
 	 * Loads airport choices into the combo boxes
 	 */
 	private void loadAirports() {
-		for (Airport a : airportMap.getAirports()) {
-			originComboBox.addItem(a);
-			destinationComboBox.addItem(a);
+		//System.out.println("Airport count: " + airportMap.getAirports().size());
+		for(int i = 0; i < airportMap.getSize(); i++) {
+			System.out.println("Adding to combo: " + i);
+			originComboBox.addItem(airportMap.getAirport(i));
+			destinationComboBox.addItem(airportMap.getAirport(i));
 		}
+		
+		//refresh comboboxes
+		originComboBox.revalidate();
+		originComboBox.repaint();
+		destinationComboBox.revalidate();
+		destinationComboBox.repaint();
+		
 	}
 	
 	private void addEventHandlers() {

@@ -1,8 +1,5 @@
 package airportRoute;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import edu.princeton.cs.algs4.BreadthFirstPaths;
 import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.algs4.DijkstraUndirectedSP;
@@ -11,6 +8,7 @@ import edu.princeton.cs.algs4.Edge;
 import edu.princeton.cs.algs4.EdgeWeightedDigraph;
 import edu.princeton.cs.algs4.Graph;
 import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.ST;
 
 /**
  * 
@@ -21,24 +19,25 @@ public class Map {
 	private EdgeWeightedSymbolGraph map;
 	private int size;
 	
-	private HashMap<String, Integer> codeToIndex;
-	private ArrayList<String> indexToCode;
-	private ArrayList<Airport> airports;
-	//private EdgeWeightedDigraph graph;
-	private Digraph graph;
+	private ST<String, Integer> codeToIndex;
+	private String[] indexToCode;
+	private Airport[] airports;
+	private EdgeWeightedDigraph graph;
+	//private Digraph graph;
 	
 	
 	/**
 	 * Constructs the map from a route file
 	 */
 	public Map(String fileName) {
-		codeToIndex = new HashMap<String, Integer>();
-		indexToCode = new ArrayList<String>();
-		airports = new ArrayList<Airport>();
+		codeToIndex = new ST<String, Integer>();
+		indexToCode = new String[100];//ArrayList<String>();
+		airports = new Airport[100];
+		size = 0;//indexToCode.size();
 		
 		buildSymbolTable(fileName);
 		buildGraph(fileName);
-		size = indexToCode.size();
+		
 		//String fileName = "src/airportRoute/Resources/Airports.txt";
 		//this.map = new EdgeWeightedSymbolGraph("src/airportRoute/Resources/Airports.txt", ",");
 		//this.size = size;
@@ -47,6 +46,7 @@ public class Map {
 	
 	/////////////////////New methods added////////////////////////////////////
 	private void buildSymbolTable(String fileName) {
+		System.out.println("Reading file....");
 		In in = new In(fileName);
 		
 		while (!in.isEmpty()) {
@@ -55,9 +55,9 @@ public class Map {
 			if (line.isEmpty())
 				continue;
 			
-			String[] parts = line.split("\\s+");
+			String[] parts = line.split(",");
 			
-			if (parts.length < 2)
+			if (parts.length < 3)
 				continue;
 			
 			String from = parts[0];//in.readString();
@@ -70,17 +70,19 @@ public class Map {
 	}
 	
 	private void addCode(String code) {
-		if (!codeToIndex.containsKey(code)) {
-			int index = indexToCode.size();
-			codeToIndex.put(code, index);
-			indexToCode.add(code);
-			airports.add(new Airport(code));
+		System.out.println("Adding airport " + code);
+		if (!codeToIndex.contains(code)) {
+			//int index = indexToCode.size();
+			codeToIndex.put(code, size);
+			indexToCode[size] = code;
+			airports[size] = new Airport(code);
+			size++;
 		}
 	}
 	
 	private void buildGraph(String fileName) {
-		//graph = new EdgeWeightedDigraph(indexToCode.size());
-		graph = new Digraph(indexToCode.size());
+		graph = new EdgeWeightedDigraph(size);
+		//graph = new Digraph(indexToCode.size());
 		
 		In in = new In(fileName);
 		
@@ -90,20 +92,20 @@ public class Map {
 			if (line.isEmpty())
 				continue;
 			
-			String[] parts = line.split("\\s+");
+			String[] parts = line.split(",");
 			
-			if (parts.length < 2)
+			if (parts.length < 3)
 				continue;
 			
 			String from = parts[0];//in.readString();
 			String to = parts[1];//in.readString();
-			//double cost = in.readDouble();
+			double cost = Double.parseDouble(parts[2].trim());
 			
 			
 			int fromIndex = codeToIndex.get(from);
 			int toIndex = codeToIndex.get(to);
 			
-			graph.addEdge(fromIndex, toIndex);
+			graph.addEdge(new DirectedEdge(fromIndex, toIndex, cost));
 			//addCode(from);
 			//addCode(to);
 			//graph.addEdge(new DirectedEdge(fromIndex, toIndex, cost));
@@ -111,12 +113,12 @@ public class Map {
 		
 	}
 	
-	public ArrayList<Airport> getAirports() {
-		return airports;
+	public Airport getAirport(int index) {
+		return airports[index];
 	}
 	
 	public boolean contains(String code) {
-		return codeToIndex.containsKey(code);
+		return codeToIndex.contains(code);
 	}
 	
 	public int indexOf(String code) {
@@ -124,10 +126,10 @@ public class Map {
 	}
 	
 	public String codeOf(int index) {
-		return indexToCode.get(index);
+		return indexToCode[index];
 	}
 	
-	public Digraph getGraph() {
+	public EdgeWeightedDigraph getGraph() {
 		return graph;
 	}
 	
