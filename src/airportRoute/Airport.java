@@ -2,7 +2,6 @@ package airportRoute;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -13,8 +12,23 @@ import javax.swing.JPanel;
  */
 public class Airport {
 	private String name;
-	private double distance;
+	//private double price;
 	
+	public Airport(String name) {
+		this.name = name;
+	}
+	
+	///////New methods///////////////////////////////////////////////
+	public String getName() {
+		return name;
+	}
+	
+	@Override
+	public String toString() {
+		return name;
+	}
+	
+	///////////////////////////////////////////////////////////////////
 	public static void display(JPanel contentPane) {
 		JPanel southPanel = new JPanel();
 		contentPane.add(southPanel, BorderLayout.SOUTH);
@@ -23,6 +37,8 @@ public class Airport {
 		displayRoute.setBackground(new Color(255, 255, 255));
 		southPanel.add(displayRoute);
 	}
+	
+	
 	
 	
 }
