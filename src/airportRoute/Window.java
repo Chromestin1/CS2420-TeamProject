@@ -1,6 +1,7 @@
  package airportRoute;
 
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -18,10 +19,13 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import edu.princeton.cs.algs4.BreadthFirstPaths;
+import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.ST;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
+import javax.swing.JLayeredPane;
 
 public class Window extends JFrame {
 
@@ -38,6 +42,7 @@ public class Window extends JFrame {
 	private JLabel  displayRoute;
 	
 	private Route currentRoute;
+	private JLabel airport;
 
 	/**
 	 * Launch the application.
@@ -69,7 +74,7 @@ public class Window extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
 		
-		display(contentPane);
+		display();
 		loadAirports();
 		addEventHandlers();
 		/**
@@ -86,7 +91,7 @@ public class Window extends JFrame {
 		
 	}
 
-	private void display(JPanel contentPane2) {
+	private void display() {
 		JPanel southPanel = new JPanel();
 		contentPane.add(southPanel, BorderLayout.SOUTH);
 		
@@ -166,12 +171,49 @@ public class Window extends JFrame {
 		gbc_btnBook.gridy = 18;
 		controlPanel.add(btnBook, gbc_btnBook);
 		
+		JLayeredPane windowMap = new JLayeredPane();
+		contentPane.add(windowMap, BorderLayout.CENTER);
+		
 		JLabel unitedStates = new JLabel();
+		windowMap.setLayer(unitedStates, 100);
+		windowMap.moveToFront(unitedStates);
+		unitedStates.setBounds(5, 6, 893, 575);
+		windowMap.add(unitedStates);
 		ImageIcon usaIcon = new ImageIcon(Window.class.getResource("/airportRoute/Resources/usa.png"));
 																//width, height
 		Image scaledImage = usaIcon.getImage().getScaledInstance(800, 500, Image.SCALE_SMOOTH);
 		unitedStates.setIcon((new ImageIcon(scaledImage)));
-		contentPane.add(unitedStates, BorderLayout.CENTER);
+		
+		windowMap.moveToBack(unitedStates);
+		
+
+		/**
+		 * =================================================================================
+		 * Get the coordinates of the airport and display the airport
+		 */
+		
+		
+		
+		
+		airport = new JLabel("· " + "SLC");
+		airport.setBounds(252, 220, 36, 20);
+		windowMap.add(airport);
+		airport.setFont(new Font("FontName", 0, 10));
+		
+		airport = new JLabel("· " + "PVU");
+		airport.setBounds(253, 229, 36, 20);
+		windowMap.add(airport);
+		airport.setFont(new Font("FontName", 0, 10));
+		
+		airport = new JLabel("· " + "OGD");
+		airport.setBounds(253, 200, 36, 20);
+		windowMap.add(airport);
+		airport.setFont(new Font("FontName", 0, 10));
+		
+		String file = "src/airportRoute/Resources/usa.png";
+		String delimiter = ",";
+		
+		generateLabel(file, delimiter);
 		
 		//Map airportMap = new Map("src/airportRoute/Resources/Airports.txt");
 		
@@ -274,4 +316,31 @@ public class Window extends JFrame {
 		return null;
 	}
 	
+	/**
+	 * generateLabel generates the label on the map by using AirportCoord.txt
+	 * to get the city followed by the coordinates.
+	 * 
+	 * @param file
+	 * @param delimiter
+	 */
+	public static void generateLabel(String file, String delimiter) {
+		ST<String, Integer> st = new ST<String, Integer>();
+		
+		In in = new In(file);
+		
+		while (!in.isEmpty()) {
+            String[] a = in.readLine().split(delimiter);
+            for (int i = 0; i < 2; i++) {
+            	if (!st.contains(a[i]))
+            		st.put(a[i], st.size());
+            }
+        }
+		
+		while (in.hasNextLine()) {
+            String[] a = in.readLine().split(delimiter);
+            String v = st.get(a[0]);
+            int w = st.get(a[1]);
+            double weight = Double.parseDouble(a[2]);
+		}
+	}
 }
