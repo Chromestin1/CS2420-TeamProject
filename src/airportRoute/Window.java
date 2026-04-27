@@ -1,4 +1,4 @@
- package airportRoute;
+package airportRoute;
 
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -18,14 +18,14 @@ import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import edu.princeton.cs.algs4.BreadthFirstPaths;
+import edu.princeton.cs.algs4.BreadthFirstDirectedPaths;
+import edu.princeton.cs.algs4.DijkstraSP;
 import edu.princeton.cs.algs4.In;
-import edu.princeton.cs.algs4.ST;
+import edu.princeton.cs.algs4.StdOut;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
-import javax.swing.JLayeredPane;
 
 public class Window extends JFrame {
 
@@ -33,16 +33,18 @@ public class Window extends JFrame {
 	private JPanel contentPane;
 	private JRadioButton cheapest;
 	private JRadioButton leastConnections;
-	
+
 	private Map airportMap = new Map("src/airportRoute/Resources/Airports.txt");
 	private JComboBox<Airport> originComboBox;
 	private JComboBox<Airport> destinationComboBox;
-	
+
 	private JButton btnBook;
-	private JLabel  displayRoute;
-	
+	private JLabel displayRoute;
+
 	private Route currentRoute;
 	private JLabel airport;
+
+	private MapWindow windowMap;
 
 	/**
 	 * Launch the application.
@@ -66,58 +68,56 @@ public class Window extends JFrame {
 	public Window() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1000, 650);
-		
+
 		airportMap = new Map("src/airportRoute/Resources/Airports.txt");
-		
+
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
-		
+
 		display();
 		loadAirports();
 		addEventHandlers();
 		/**
-		ControlPanel.display(contentPane);
-		
-		MapWindow.display(contentPane);
-		
-		Airport.display(contentPane);
-		*/
-		
-		
-		//loadAirports();
-		
-		
+		 * ControlPanel.display(contentPane);
+		 * 
+		 * MapWindow.display(contentPane);
+		 * 
+		 * Airport.display(contentPane);
+		 */
+
+		// loadAirports();
+
 	}
 
 	private void display() {
 		JPanel southPanel = new JPanel();
 		contentPane.add(southPanel, BorderLayout.SOUTH);
-		
+
 		displayRoute = new JLabel("Display something");
 		displayRoute.setBackground(new Color(255, 255, 255));
 		southPanel.add(displayRoute);
-		
+
 		JPanel controlPanel = new JPanel();
 		contentPane.add(controlPanel, BorderLayout.WEST);
 		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[]{30, 0};
-		gbl_panel.rowHeights = new int[]{0, 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_panel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.columnWidths = new int[] { 30, 0 };
+		gbl_panel.rowHeights = new int[] { 0, 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		gbl_panel.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+		gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+				0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		controlPanel.setLayout(gbl_panel);
-		
+
 		ButtonGroup stuff = new ButtonGroup();
-		
+
 		JLabel originText = new JLabel("Origin");
 		GridBagConstraints gbc_originText = new GridBagConstraints();
 		gbc_originText.insets = new Insets(0, 0, 5, 0);
 		gbc_originText.gridx = 0;
 		gbc_originText.gridy = 6;
 		controlPanel.add(originText, gbc_originText);
-		
-		//JComboBox<?> origin = new JComboBox<>();
+
 		originComboBox = new JComboBox<Airport>();
 		GridBagConstraints gbc_origin = new GridBagConstraints();
 		gbc_origin.fill = GridBagConstraints.HORIZONTAL;
@@ -125,14 +125,14 @@ public class Window extends JFrame {
 		gbc_origin.gridx = 0;
 		gbc_origin.gridy = 7;
 		controlPanel.add(originComboBox, gbc_origin);
-		
+
 		JLabel destinationText = new JLabel("Destination");
 		GridBagConstraints gbc_destinationText = new GridBagConstraints();
 		gbc_destinationText.insets = new Insets(0, 0, 5, 0);
 		gbc_destinationText.gridx = 0;
 		gbc_destinationText.gridy = 9;
 		controlPanel.add(destinationText, gbc_destinationText);
-		
+
 		destinationComboBox = new JComboBox<>();
 		GridBagConstraints gbc_destination = new GridBagConstraints();
 		gbc_destination.insets = new Insets(0, 0, 5, 0);
@@ -140,8 +140,8 @@ public class Window extends JFrame {
 		gbc_destination.gridx = 0;
 		gbc_destination.gridy = 10;
 		controlPanel.add(destinationComboBox, gbc_destination);
-		
-		//Radio button 1
+
+		// Radio button 1
 		leastConnections = new JRadioButton("Least Connections");
 		leastConnections.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		leastConnections.setHorizontalAlignment(SwingConstants.LEFT);
@@ -151,8 +151,8 @@ public class Window extends JFrame {
 		gbc_leastConnections.gridy = 12;
 		controlPanel.add(leastConnections, gbc_leastConnections);
 		stuff.add(leastConnections);
-		
-		//Radio button 2
+
+		// Radio button 2
 		cheapest = new JRadioButton("Cheapest Route");
 		cheapest.setHorizontalTextPosition(SwingConstants.RIGHT);
 		cheapest.setHorizontalAlignment(SwingConstants.LEFT);
@@ -162,145 +162,169 @@ public class Window extends JFrame {
 		gbc_cheapest.gridy = 13;
 		controlPanel.add(cheapest, gbc_cheapest);
 		stuff.add(cheapest);
-		
-		//Button
+
+		// Button
 		btnBook = new JButton("Book");
-		btnBook.setEnabled(true);
+		btnBook.setEnabled(false);
 		GridBagConstraints gbc_btnBook = new GridBagConstraints();
 		gbc_btnBook.gridx = 0;
 		gbc_btnBook.gridy = 18;
 		controlPanel.add(btnBook, gbc_btnBook);
-		
-		JLayeredPane windowMap = new JLayeredPane();
+
+		windowMap = new MapWindow();
 		contentPane.add(windowMap, BorderLayout.CENTER);
-		
+
 		JLabel unitedStates = new JLabel();
 		windowMap.setLayer(unitedStates, 100);
 		windowMap.moveToFront(unitedStates);
 		unitedStates.setBounds(5, 6, 893, 575);
 		windowMap.add(unitedStates);
 		ImageIcon usaIcon = new ImageIcon(Window.class.getResource("/airportRoute/Resources/usa.png"));
-																//width, height
 		Image scaledImage = usaIcon.getImage().getScaledInstance(800, 500, Image.SCALE_SMOOTH);
 		unitedStates.setIcon((new ImageIcon(scaledImage)));
-		
-		windowMap.moveToBack(unitedStates);
-		
 
-		/**
-		 * =================================================================================
-		 * Get the coordinates of the airport and display the airport
+		windowMap.moveToBack(unitedStates);
+
+		//These are used to figure out the coordinates for the label
+		/*addAirportLabel("SLC", 252, 220);
+		addAirportLabel("PVU", 253, 229);
+		addAirportLabel("OGD", 253, 200);
+		addAirportLabel("SGU", 223, 270);
+		addAirportLabel("JFK", 735, 195);
+		addAirportLabel("ATL", 615, 355);
+		BOS,758,165
+		DTW,635,230
+		LAX,95,355
+		MSP,495,185
+		SEA,140,75
+		SNA,105,365
+		PHX,225,365
+		SFO,75,285
+		BUR,100,345
+		MCO,650,450
+		IAD,690,275
+		DFW,440,390
+		RDU,675,330
+		LAS,190,330
+		ELK,245,205
+		LGU,250,210
+		CNY,275,255
+		ORD,575,235
+		SYR,705,180
+		DEN,365,270
+		EKO,220,205
+		HOU,485,430
+		IAH,490,420
+		CDC,230,260
+		
+		*/
+		
+		
+		/*
+		 * TODO add more labels and find it's coordinates
 		 */
 		
 		
-		
-		
-		airport = new JLabel("· " + "SLC");
-		airport.setBounds(252, 220, 36, 20);
-		windowMap.add(airport);
-		airport.setFont(new Font("FontName", 0, 10));
-		
-		airport = new JLabel("· " + "PVU");
-		airport.setBounds(253, 229, 36, 20);
-		windowMap.add(airport);
-		airport.setFont(new Font("FontName", 0, 10));
-		
-		airport = new JLabel("· " + "OGD");
-		airport.setBounds(253, 200, 36, 20);
-		windowMap.add(airport);
-		airport.setFont(new Font("FontName", 0, 10));
-		
-		String file = "src/airportRoute/Resources/usa.png";
+		String file = "src/airportRoute/Resources/AirportCoord.txt";
 		String delimiter = ",";
+
+		generateLabel(windowMap, file, delimiter);
+
 		
-		generateLabel(file, delimiter);
-		
-		//Map airportMap = new Map("src/airportRoute/Resources/Airports.txt");
-		
-		//for (Airport airport : airportMap.getAirports()) {
-		//	originComboBox.addItem(airport);
-		//	destinationComboBox.addItem(airport);
-		//}
-		
+
 	}
-	
-	
+
 	/*
 	 * Loads airport choices into the combo boxes
 	 */
 	private void loadAirports() {
-		//System.out.println("Airport count: " + airportMap.getAirports().size());
-		for(int i = 0; i < airportMap.getSize(); i++) {
-			System.out.println("Adding to combo: " + i);
+		for (int i = 0; i < airportMap.getSize(); i++) {
+			StdOut.println("Adding to combo: " + i);
 			originComboBox.addItem(airportMap.getAirport(i));
 			destinationComboBox.addItem(airportMap.getAirport(i));
 		}
-		
-		//refresh comboboxes
+
+		// refresh comboboxes
 		originComboBox.revalidate();
 		originComboBox.repaint();
 		destinationComboBox.revalidate();
 		destinationComboBox.repaint();
-		
+
 	}
-	
+
+	/*
+	 * Adds function to comboboxes, radioboxes, and button
+	 */
 	private void addEventHandlers() {
-		originComboBox.addActionListener(e -> updateRouteDisplay());
-		destinationComboBox.addActionListener(e -> updateRouteDisplay());
-		
-		leastConnections.addActionListener(e -> updateRouteDisplay());
-		cheapest.addActionListener(e -> updateRouteDisplay());
-		
-		btnBook.addActionListener(e -> {
-			if (currentRoute != null) {
-				currentRoute.book();
-				displayRoute.setText("Trip book: " + currentRoute);
-			}
-			
-		});
-		
+		originComboBox.addActionListener(e -> updateBookButtonState());
+		destinationComboBox.addActionListener(e -> updateBookButtonState());
+
+		leastConnections.addActionListener(e -> updateBookButtonState());
+		cheapest.addActionListener(e -> updateBookButtonState());
+
+		btnBook.addActionListener(e -> updateRouteDisplay());
+
 	}
-	
+
+	/*
+	 * Updates the route display label
+	 */
+
 	private void updateRouteDisplay() {
 		Airport origin = (Airport) originComboBox.getSelectedItem();
 		Airport destination = (Airport) destinationComboBox.getSelectedItem();
-		
+
 		currentRoute = null;
-		btnBook.setEnabled(false);
-		
+
 		if (origin == null || destination == null) {
 			displayRoute.setText("Please select both airports. ");
 			return;
-			
+
 		}
-		
+
 		if (origin.equals(destination)) {
-			displayRoute.setText("Origin anddestination must be different.");
+			displayRoute.setText("Origin and destination must be different.");
 			return;
 		}
-		
-		if (leastConnections.isSelected()) {
+
+		if (leastConnections.isSelected())
 			currentRoute = findMostDirectRoute(origin, destination);
-		} else if (cheapest.isSelected()) {
+		else if (cheapest.isSelected())
 			currentRoute = findCheapestRoute(origin, destination);
-		}
+		else
+			displayRoute.setText("Please select a route type.");
 
 		if (currentRoute == null) {
 			displayRoute.setText("No route found.");
 			return;
 		}
 
-		displayRoute.setText(currentRoute.toString());
-		btnBook.setEnabled(true);
+		displayRoute.setText("Route: " + currentRoute);
 		
-		
+
 	}
-	
+
+	/*
+	 * Enables or disables the Book button based on user input
+	 */
+	private void updateBookButtonState() {
+		Airport origin = (Airport) originComboBox.getSelectedItem();
+		Airport destination = (Airport) destinationComboBox.getSelectedItem();
+
+		boolean hasOrigin = origin != null;
+		boolean hasDestination = destination != null;
+		boolean differentAirports = hasOrigin && hasDestination && !origin.equals(destination);
+		boolean hasRouteType = leastConnections.isSelected() || cheapest.isSelected();
+
+		btnBook.setEnabled(differentAirports && hasRouteType);
+
+	}
+
 	private Route findMostDirectRoute(Airport origin, Airport destination) {
 		int originIndex = airportMap.indexOf(origin.getName());
 		int destinationIndex = airportMap.indexOf(destination.getName());
 
-		BreadthFirstPaths bfs = airportMap.mostDirect(originIndex);
+		BreadthFirstDirectedPaths bfs = airportMap.mostDirect(originIndex);
 
 		if (!bfs.hasPathTo(destinationIndex)) {
 			return null;
@@ -308,39 +332,60 @@ public class Window extends JFrame {
 
 		return new Route(origin, destination, 0.0);
 	}
-	
-	/*
-	 * Waiting to be implemented
-	 */
+
 	private Route findCheapestRoute(Airport origin, Airport destination) {
-		return null;
+		int originIndex = airportMap.indexOf(origin.getName());
+		int destinationIndex = airportMap.indexOf(destination.getName());
+
+		DijkstraSP sp = airportMap.cheapest(originIndex);
+
+		if (!sp.hasPathTo(destinationIndex))
+			return null;
+
+		return new Route(origin, destination, sp.distTo(destinationIndex));
 	}
-	
+
 	/**
-	 * generateLabel generates the label on the map by using AirportCoord.txt
-	 * to get the city followed by the coordinates.
+	 * 
+	 * generateLabel generates the label on the map by using AirportCoord.txt to get
+	 * the city followed by the coordinates.
 	 * 
 	 * @param file
 	 * @param delimiter
 	 */
-	public static void generateLabel(String file, String delimiter) {
-		ST<String, Integer> st = new ST<String, Integer>();
-		
+	private void generateLabel(MapWindow windowMap, String file, String delimiter) {
 		In in = new In(file);
-		
-		while (!in.isEmpty()) {
-            String[] a = in.readLine().split(delimiter);
-            for (int i = 0; i < 2; i++) {
-            	if (!st.contains(a[i]))
-            		st.put(a[i], st.size());
-            }
-        }
-		
+
 		while (in.hasNextLine()) {
-            String[] a = in.readLine().split(delimiter);
-            String v = st.get(a[0]);
-            int w = st.get(a[1]);
-            double weight = Double.parseDouble(a[2]);
+			String line = in.readLine().trim();
+			
+			if (line.isEmpty())
+				continue;
+			
+			String[] parts = line.split(delimiter);
+			
+			if (parts.length < 3) 
+				continue;
+			
+			String code = parts[0].trim();
+			int x = Integer.parseInt(parts[1].trim());
+			int y = Integer.parseInt(parts[2].trim());
+			
+			addAirportLabel(code, x, y);
 		}
+		
+	}
+
+	/*
+	 * This method adds labels for the name of airports
+	 */
+
+	private void addAirportLabel(String code, int x, int y) {
+		airport = new JLabel("· " + code);
+		airport.setBounds(x, y, 36, 20);
+		airport.setForeground(Color.BLUE);
+		airport.setFont(new Font("Arial", Font.BOLD, 10));
+		windowMap.add(airport);
+
 	}
 }
