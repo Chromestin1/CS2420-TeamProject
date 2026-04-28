@@ -20,7 +20,9 @@ import javax.swing.border.EmptyBorder;
 
 import edu.princeton.cs.algs4.BreadthFirstPaths;
 import edu.princeton.cs.algs4.DijkstraUndirectedSP;
+import edu.princeton.cs.algs4.Edge;
 import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.Queue;
 import edu.princeton.cs.algs4.StdOut;
 
 import java.awt.BorderLayout;
@@ -340,18 +342,40 @@ public class Window extends JFrame {
 		
 		Double cost = 0.0;
 		int pre = 0;
-		boolean path = true;
+		boolean first = true;
+		Queue<Integer> path = new Queue<>();
 		for (int el : bfs.pathTo(destinationIndex)) {
-			if (!path) {
+			if (!first) {
 				DijkstraUndirectedSP sp = airportMap.cheapest(el);
 				cost += sp.distTo(pre);
 			} else {
-				path = false;
+				first = false;
 			}
+			path.enqueue(el);
 			pre = el;
 		}
+		
+		
+		int[] airportNumber = new int[(path.size() * 2) - 2];
+		
+		int i = 0;
+		first = true;
+		for (int el : path) {
+			if (!first) {
+				airportNumber[i] = pre;
+				airportNumber[i + 1] = el;
+				i += 2;
+			}
+			pre = el;
+			first = false;
+		}
+		
+		Airport[] airports = new Airport[airportNumber.length];
+		for (int j = 0; j < airportNumber.length; j++) {
+			airports[j] = airportMap.getAirport(airportNumber[j]);
+		}
 
-		return new Route(origin, destination, cost);
+		return new Route(airports, cost);
 	}
 
 	/*
@@ -374,7 +398,34 @@ public class Window extends JFrame {
 		if (!sp.hasPathTo(destinationIndex))
 			return null;
 
-		return new Route(origin, destination, sp.distTo(destinationIndex));
+		Queue<Integer> path = new Queue<>();
+		int airport = -1;
+		for (Edge el : sp.pathTo(destinationIndex)) {
+			if (el.either() == airportMap.indexOf(origin.getName()) || el.either() == airport) {
+				path.enqueue(el.either());
+				path.enqueue(el.other(el.either()));
+				airport = el.other(el.either());
+			} else {
+				path.enqueue(el.other(el.either()));
+				path.enqueue(el.either());
+				airport = el.either();
+			}
+		}
+		int[] airportNumber = new int[path.size()];
+		
+		int i = 0;
+		for (int el : path) {
+			airportNumber[i] = el;
+			i++;
+		}
+		
+		Airport[] airports = new Airport[airportNumber.length];
+		for (int j = 0; j < airportNumber.length; j++) {
+			airports[j] = airportMap.getAirport(airportNumber[j]);
+		}
+		
+		
+		return new Route(airports, sp.distTo(destinationIndex));
 	}
 
 	/**
