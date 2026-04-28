@@ -21,6 +21,7 @@ import javax.swing.border.EmptyBorder;
 import edu.princeton.cs.algs4.BreadthFirstPaths;
 import edu.princeton.cs.algs4.DijkstraUndirectedSP;
 import edu.princeton.cs.algs4.Edge;
+import edu.princeton.cs.algs4.EdgeWeightedGraph;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.Queue;
 import edu.princeton.cs.algs4.StdOut;
@@ -317,7 +318,7 @@ public class Window extends JFrame {
 	 * 
 	 * @return a Route if found, otherwise null
 	 */
-	private Route findMostDirectRoute(Airport origin, Airport destination) {
+private Route findMostDirectRoute(Airport origin, Airport destination) {
 		int originIndex = airportMap.indexOf(origin.getName());
 		int destinationIndex = airportMap.indexOf(destination.getName());
 
@@ -326,24 +327,34 @@ public class Window extends JFrame {
 		if (!bfs.hasPathTo(destinationIndex)) {
 			return null;
 		}
-
+		
 		Double cost = 0.0;
 		int pre = 0;
 		boolean first = true;
 		Queue<Integer> path = new Queue<>();
 		for (int el : bfs.pathTo(destinationIndex)) {
 			if (!first) {
-				DijkstraUndirectedSP sp = airportMap.cheapest(el);
-				cost += sp.distTo(pre);
+				EdgeWeightedGraph sp = airportMap.getGraph();
+				for (Edge e : sp.adj(pre)) {
+					if ((e.either() == el &&
+							e.other(e.either()) == pre)
+							||
+							(e.either() == pre &&
+							e.other(e.either()) == el)) {
+						cost += e.weight();
+					}
+				}
+				// cost += sp.distTo(pre);
 			} else {
 				first = false;
 			}
 			path.enqueue(el);
 			pre = el;
 		}
-
+		
+		
 		int[] airportNumber = new int[(path.size() * 2) - 2];
-
+		
 		int i = 0;
 		first = true;
 		for (int el : path) {
@@ -355,7 +366,7 @@ public class Window extends JFrame {
 			pre = el;
 			first = false;
 		}
-
+		
 		Airport[] airports = new Airport[airportNumber.length];
 		for (int j = 0; j < airportNumber.length; j++) {
 			airports[j] = airportMap.getAirport(airportNumber[j]);
