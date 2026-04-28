@@ -10,12 +10,10 @@ import edu.princeton.cs.algs4.StdOut;
 public class Route {
 	private double cost;
 	private Route shortRoute;
-	private Airport origin;
-	private Airport destination;
+	private Airport[] airports;
 
-	public Route(Airport origin, Airport destination, double cost) {
-		this.origin = origin;
-		this.destination = destination;
+	public Route(Airport[] airports, double cost) {
+		this.airports = airports;
 		this.cost = cost;
 		this.shortRoute = this;
 	}
@@ -52,7 +50,7 @@ public class Route {
 	 * @throws IllegalArgumentException if either is null
 	 */
 	public void checkPassenger() {
-		if (origin == null || destination == null)
+		if (airports[0] == null || airports[airports.length - 1] == null)
 			throw new IllegalArgumentException("Route must have an origin and destination");
 	}
 
@@ -62,7 +60,7 @@ public class Route {
 	public void book() {
 		checkPassenger();
 
-		StdOut.println("Trip booked from " + origin + " to " + destination + " for $" + cost);
+		StdOut.println("Trip booked from " + airports[0] + " to " + airports[airports.length - 1] + " for $" + cost);
 	}
 
 	/*
@@ -72,7 +70,12 @@ public class Route {
 	 */
 	@Override
 	public String toString() {
-		return origin + " -> " + destination + " ($" + String.format("%.2f",cost) + ")";
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < airports.length; i += 2) {
+			sb.append(airports[i] + " -> " + airports[i + 1]);
+			sb.append(" | ");
+		}
+		return sb.toString() + " ($" + String.format("%.2f",cost) + ")";
 	}
 
 }
