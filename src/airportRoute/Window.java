@@ -18,8 +18,8 @@ import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import edu.princeton.cs.algs4.BreadthFirstDirectedPaths;
-import edu.princeton.cs.algs4.DijkstraSP;
+import edu.princeton.cs.algs4.BreadthFirstPaths;
+import edu.princeton.cs.algs4.DijkstraUndirectedSP;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
 
@@ -331,13 +331,26 @@ public class Window extends JFrame {
 		int originIndex = airportMap.indexOf(origin.getName());
 		int destinationIndex = airportMap.indexOf(destination.getName());
 
-		BreadthFirstDirectedPaths bfs = airportMap.mostDirect(originIndex);
+		BreadthFirstPaths bfs = airportMap.mostDirect(originIndex);
 
 		if (!bfs.hasPathTo(destinationIndex)) {
 			return null;
 		}
+		
+		Double cost = 0.0;
+		int pre = 0;
+		boolean path = true;
+		for (int el : bfs.pathTo(destinationIndex)) {
+			if (!path) {
+				DijkstraUndirectedSP sp = airportMap.cheapest(el);
+				cost += sp.distTo(pre);
+			} else {
+				path = false;
+			}
+			pre = el;
+		}
 
-		return new Route(origin, destination, 0.0);
+		return new Route(origin, destination, cost);
 	}
 
 	/*
@@ -355,7 +368,7 @@ public class Window extends JFrame {
 		int originIndex = airportMap.indexOf(origin.getName());
 		int destinationIndex = airportMap.indexOf(destination.getName());
 
-		DijkstraSP sp = airportMap.cheapest(originIndex);
+		DijkstraUndirectedSP sp = airportMap.cheapest(originIndex);
 
 		if (!sp.hasPathTo(destinationIndex))
 			return null;
