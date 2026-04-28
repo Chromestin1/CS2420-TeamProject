@@ -1,6 +1,7 @@
 package airportRoute;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Image;
 
 import javax.swing.ImageIcon;
@@ -8,6 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
+import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
 
 /**
@@ -60,30 +62,42 @@ public class MapWindow extends JLayeredPane {
 	/*
 	 * Sets route
 	 */
-	/*
-	 * public void setRoute(Airport origin, Airport destination) { this.origin =
-	 * origin; this.destination = destination; repaint(); }
-	 */
 
-	// This is attempting to draw the line between to labels
-	// @Override
-	/*
-	 * protected void paintComponent(java.awt.Graphics g) { super.paintComponent(g);
-	 * 
-	 * if (origin != null && destination != null) { int[] start =
-	 * getPoint(origin.getName()); int[] end = getPoint(destination.getName());
-	 * 
-	 * if (start != null && end != null) { g.setColor(Color.RED);
-	 * g.drawLine(start[0], start[1], end[0], end[1]); } } }*
-	 * 
-	 * 
-	 * /*private int[] getPoint(String code) { if (code.equals("SLC")) return new
-	 * int[] { 252, 220 }; if (code.equals("PVU")) return new int[] { 253, 229 }; if
-	 * (code.equals("OGD")) return new int[] { 253, 200 }; if (code.equals("SGU"))
-	 * return new int[] { 233, 270 }; if (code.equals("JFK")) return new int[] {
-	 * 735, 195 }; if (code.equals("ATL")) return new int[] { 615, 355 };
-	 * 
-	 * return null; }
-	 */
+	protected void paintComponent(java.awt.Graphics g, Airport origin, Airport destination) {
+		super.paintComponent(g);
+
+		if (origin != null && destination != null) {
+			int[] start = getPoint(origin.getName());
+			int[] end = getPoint(destination.getName());
+
+			if (start != null && end != null) {
+				g.setColor(Color.RED);
+				g.drawLine(start[0], start[1], end[0], end[1]);
+			}
+		}
+	}
+
+	private int[] getPoint(String code) {
+		In in = new In("src/airportRoute/Resources/AirportCoord.txt");
+		
+		while (!in.isEmpty()) {
+			String line = in.readLine().trim();
+			
+			if (line.isEmpty())
+				continue;
+			
+			String[] parts = line.split(",");
+
+			if (parts.length < 3)
+				continue;
+
+			if (code.equals(parts[0].trim())) {
+				return new int[] { Integer.parseInt(parts[1].trim()), Integer.parseInt(parts[2].trim()) };
+			}
+		}
+		
+		
+		return null;
+	}
 
 }
