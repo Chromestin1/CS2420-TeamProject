@@ -10,7 +10,10 @@ import edu.princeton.cs.algs4.ST;
 import edu.princeton.cs.algs4.StdOut;
 
 /**
+ * Represents the airport network as a graph
  * 
+ * Stores airport codes, builds directed graphs for routes, and provides
+ * algorithms for route computation.
  * 
  * @author Benjamin Shaw & Ian Shoell
  */
@@ -24,7 +27,9 @@ public class Map {
 	private Digraph directGraph;
 
 	/**
-	 * Constructs the map from a route file
+	 * Constructs the airport map from a route file
+	 * 
+	 * @param fileName the input file containing routes
 	 */
 	public Map(String fileName) {
 		codeToIndex = new ST<String, Integer>();
@@ -35,11 +40,10 @@ public class Map {
 		buildSymbolTable(fileName);
 		buildGraph(fileName);
 
-
 	}
 
 	/*
-	 * This method reads the file
+	 * Reads airport codes from the file and assigns indices
 	 */
 	private void buildSymbolTable(String fileName) {
 		System.out.println("Reading file....");
@@ -65,7 +69,9 @@ public class Map {
 	}
 
 	/*
-	 * Adds the airport code
+	 * Adds the airport code if it does not already exist.
+	 * 
+	 * @param code the airport code
 	 */
 	private void addCode(String code) {
 		StdOut.println("Adding airport " + code);
@@ -77,6 +83,12 @@ public class Map {
 		}
 	}
 
+	/*
+	 * Builds both weighted and unweighted graphs from the input file.
+	 * 
+	 * Weighted graph is used for cost calculations. Unweighted graph is used for
+	 * BFS (least connections).
+	 */
 	private void buildGraph(String fileName) {
 		graph = new EdgeWeightedDigraph(size);
 		directGraph = new Digraph(size);
@@ -107,22 +119,57 @@ public class Map {
 
 	}
 
+	/*
+	 * Returns the Aiport object at the given index.
+	 * 
+	 * @param index the airport index
+	 * 
+	 * @return the corresponding Airport
+	 */
 	public Airport getAirport(int index) {
 		return airports[index];
 	}
 
+	/*
+	 * Checks whether the given airport code exists in the map
+	 * 
+	 * @param code the airport code
+	 * 
+	 * @return true if the airport exists, otherwise false
+	 */
 	public boolean contains(String code) {
 		return codeToIndex.contains(code);
 	}
 
+	/*
+	 * Returns the index associated with an airport code.
+	 * 
+	 * @param code the airport code
+	 * 
+	 * @return the corresponding index
+	 */
 	public int indexOf(String code) {
 		return codeToIndex.get(code);
 	}
 
+	/*
+	 * Returns the airport code stored at the given index.
+	 * 
+	 * @param index the airport index
+	 * 
+	 * @return the airport code
+	 */
 	public String codeOf(int index) {
 		return indexToCode[index];
 	}
 
+	/*
+	 * Returns the weighted graph representing airport routes.
+	 * 
+	 * This graph is used for cost-based algorithms such as Dijkstra.
+	 * 
+	 * @return the weighted directed graph
+	 */
 	public EdgeWeightedDigraph getGraph() {
 		return graph;
 	}
@@ -160,6 +207,11 @@ public class Map {
 		return x * 1000 + y;
 	}
 
+	/*
+	 * Returns the number of airports in the map
+	 * 
+	 * @returns the total number of airports
+	 */
 	public int getSize() {
 		return size;
 	}

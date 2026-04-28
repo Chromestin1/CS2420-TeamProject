@@ -27,6 +27,17 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
 
+/*
+ * Provides the graphical user interface for the Airport Route Application
+ * 
+ * This class allows the user to:
+ * -Select an origin and destination airport
+ * -Choose a route type (least connections or cheapest
+ * -Display the resulting route and cost
+ * -Visualize routes on a map
+ * 
+ * @author Ian Shoell and Benjamin Shaw
+ */
 public class Window extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -48,6 +59,7 @@ public class Window extends JFrame {
 
 	/**
 	 * Launch the application.
+	 * 
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -63,7 +75,9 @@ public class Window extends JFrame {
 	}
 
 	/**
-	 * Create the frame.
+	 * Constructs the main application window
+	 * 
+	 * Initializes layout, loads airport data, and attaches event handlers.
 	 */
 	public Window() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -91,6 +105,11 @@ public class Window extends JFrame {
 
 	}
 
+	/*
+	 * Builds and arranges all GUI components.
+	 * 
+	 * Creates the control panel, map display, labels, and loads the map image.
+	 */
 	private void display() {
 		JPanel southPanel = new JPanel();
 		contentPane.add(southPanel, BorderLayout.SOUTH);
@@ -185,52 +204,29 @@ public class Window extends JFrame {
 
 		windowMap.moveToBack(unitedStates);
 
-		//These are used to figure out the coordinates for the label
-		/*addAirportLabel("SLC", 252, 220);
-		addAirportLabel("PVU", 253, 229);
-		addAirportLabel("OGD", 253, 200);
-		addAirportLabel("SGU", 223, 270);
-		addAirportLabel("JFK", 735, 195);
-		addAirportLabel("ATL", 615, 355);
-		BOS,758,165
-		DTW,635,230
-		LAX,95,355
-		MSP,495,185
-		SEA,140,75
-		SNA,105,365
-		PHX,225,365
-		SFO,75,285
-		BUR,100,345
-		MCO,650,450
-		IAD,690,275
-		DFW,440,390
-		RDU,675,330
-		LAS,190,330
-		ELK,245,205
-		LGU,250,210
-		CNY,275,255
-		ORD,575,235
-		SYR,705,180
-		DEN,365,270
-		EKO,220,205
-		HOU,485,430
-		IAH,490,420
-		CDC,230,260
-		
-		*/
-		
-		
+		// These are used to figure out the coordinates for the label
+		/*
+		 * addAirportLabel("SLC", 252, 220); addAirportLabel("PVU", 253, 229);
+		 * addAirportLabel("OGD", 253, 200); addAirportLabel("SGU", 223, 270);
+		 * addAirportLabel("JFK", 735, 195); addAirportLabel("ATL", 615, 355);
+		 * 
+		 * SFO,75,285 BUR,100,345 MCO,650,450 IAD,690,275 DFW,440,390 RDU,675,330
+		 * LAS,190,330 LGU,250,210 CNY,275,255 ORD,575,235 SYR,705,180 DEN,365,270
+		 * IAH,490,420 CDC,230,260
+		 * 
+		 */
+
 		/*
 		 * TODO add more labels and find it's coordinates
 		 */
-		
-		
+		addAirportLabel("MSP", 495, 165);
+		addAirportLabel("SEA", 140, 75);
+		addAirportLabel("PHX", 225, 365);
+
 		String file = "src/airportRoute/Resources/AirportCoord.txt";
 		String delimiter = ",";
 
-		generateLabel(windowMap, file, delimiter);
-
-		
+		generateLabel(file, delimiter);
 
 	}
 
@@ -300,7 +296,6 @@ public class Window extends JFrame {
 		}
 
 		displayRoute.setText("Route: " + currentRoute);
-		
 
 	}
 
@@ -320,6 +315,18 @@ public class Window extends JFrame {
 
 	}
 
+	/*
+	 * Finds the route with the fewest connections
+	 * 
+	 * Uses breadth-first search (BFS) to determine whether a path exists between
+	 * the origin and destination.
+	 * 
+	 * @param origin the starting airport
+	 * 
+	 * @param origin the starting airport
+	 * 
+	 * @return a Route if found, otherwise null
+	 */
 	private Route findMostDirectRoute(Airport origin, Airport destination) {
 		int originIndex = airportMap.indexOf(origin.getName());
 		int destinationIndex = airportMap.indexOf(destination.getName());
@@ -333,6 +340,17 @@ public class Window extends JFrame {
 		return new Route(origin, destination, 0.0);
 	}
 
+	/*
+	 * Finds the cheapest route between two airports.
+	 * 
+	 * Uses Dijkstra's shortest path algorithm to compute minimum cost.
+	 * 
+	 * @param origin the starting airport
+	 * 
+	 * @param destination airport
+	 * 
+	 * @return a Route if found, otherwise null
+	 */
 	private Route findCheapestRoute(Airport origin, Airport destination) {
 		int originIndex = airportMap.indexOf(origin.getName());
 		int destinationIndex = airportMap.indexOf(destination.getName());
@@ -353,31 +371,37 @@ public class Window extends JFrame {
 	 * @param file
 	 * @param delimiter
 	 */
-	private void generateLabel(MapWindow windowMap, String file, String delimiter) {
+	private void generateLabel(String file, String delimiter) {
 		In in = new In(file);
 
 		while (in.hasNextLine()) {
 			String line = in.readLine().trim();
-			
+
 			if (line.isEmpty())
 				continue;
-			
+
 			String[] parts = line.split(delimiter);
-			
-			if (parts.length < 3) 
+
+			if (parts.length < 3)
 				continue;
-			
+
 			String code = parts[0].trim();
 			int x = Integer.parseInt(parts[1].trim());
 			int y = Integer.parseInt(parts[2].trim());
-			
+
 			addAirportLabel(code, x, y);
 		}
-		
+
 	}
 
 	/*
-	 * This method adds labels for the name of airports
+	 * Adds a label for an airport at a specific position on the map.
+	 * 
+	 * @param code the airport code
+	 * 
+	 * @param x the x-coordinate
+	 * 
+	 * @param y the y-coordinate
 	 */
 
 	private void addAirportLabel(String code, int x, int y) {

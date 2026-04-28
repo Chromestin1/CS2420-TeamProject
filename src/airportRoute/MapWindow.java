@@ -1,7 +1,6 @@
 package airportRoute;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Image;
 
 import javax.swing.ImageIcon;
@@ -21,9 +20,9 @@ import edu.princeton.cs.algs4.StdOut;
 public class MapWindow extends JLayeredPane {
 	private String city;
 	private int zoomLevel;
-	private JLayeredPane windowMap;
-	private Airport origin;
-	private Airport destination;
+	// private JLayeredPane windowMap;
+	// private Airport origin;
+	// private Airport destination;
 
 	/**
 	 * 
@@ -31,7 +30,7 @@ public class MapWindow extends JLayeredPane {
 	 */
 
 	public MapWindow() {
-		this.city = city;
+		// this.city = city;
 		this.zoomLevel = 100;
 	}
 
@@ -58,47 +57,33 @@ public class MapWindow extends JLayeredPane {
 		contentPane.add(unitedStates, BorderLayout.CENTER);
 	}
 
-	
 	/*
 	 * Sets route
 	 */
-	public void setRoute(Airport origin, Airport destination) {
-		this.origin = origin;
-		this.destination = destination;
-		repaint();
-	}
+	/*
+	 * public void setRoute(Airport origin, Airport destination) { this.origin =
+	 * origin; this.destination = destination; repaint(); }
+	 */
 
-	@Override
-	protected void paintComponent(java.awt.Graphics g) {
-		super.paintComponent(g);
-
-		if (origin != null && destination != null) {
-			int[] start = getPoint(origin.getName());
-			int[] end = getPoint(destination.getName());
-
-			if (start != null && end != null) {
-				g.setColor(Color.RED);
-				g.drawLine(start[0], start[1], end[0], end[1]);
-			}
-		}
-	}
-
-	
-	private int[] getPoint(String code) {
-		if (code.equals("SLC"))
-			return new int[] { 252, 220 };
-		if (code.equals("PVU"))
-			return new int[] { 253, 229 };
-		if (code.equals("OGD"))
-			return new int[] { 253, 200 };
-		if (code.equals("SGU"))
-			return new int[] { 233, 270 };
-		if (code.equals("JFK"))
-			return new int[] { 735, 195 };
-		if (code.equals("ATL"))
-			return new int[] { 615, 355 };
-
-		return null;
-	}
+	// This is attempting to draw the line between to labels
+	// @Override
+	/*
+	 * protected void paintComponent(java.awt.Graphics g) { super.paintComponent(g);
+	 * 
+	 * if (origin != null && destination != null) { int[] start =
+	 * getPoint(origin.getName()); int[] end = getPoint(destination.getName());
+	 * 
+	 * if (start != null && end != null) { g.setColor(Color.RED);
+	 * g.drawLine(start[0], start[1], end[0], end[1]); } } }*
+	 * 
+	 * 
+	 * /*private int[] getPoint(String code) { if (code.equals("SLC")) return new
+	 * int[] { 252, 220 }; if (code.equals("PVU")) return new int[] { 253, 229 }; if
+	 * (code.equals("OGD")) return new int[] { 253, 200 }; if (code.equals("SGU"))
+	 * return new int[] { 233, 270 }; if (code.equals("JFK")) return new int[] {
+	 * 735, 195 }; if (code.equals("ATL")) return new int[] { 615, 355 };
+	 * 
+	 * return null; }
+	 */
 
 }

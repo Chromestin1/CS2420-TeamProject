@@ -3,7 +3,7 @@ package airportRoute;
 import edu.princeton.cs.algs4.StdOut;
 
 /**
- * 
+ * Represents a route between two airports
  * 
  * @author Benjamin Shaw & Ian Shoell
  */
@@ -49,7 +49,7 @@ public class Route {
 	/*
 	 * Checks whether a passenger can take this route.
 	 * 
-	 * 
+	 * @throws IllegalArgumentException if either is null
 	 */
 	public void checkPassenger() {
 		if (origin == null || destination == null)
@@ -57,7 +57,7 @@ public class Route {
 	}
 
 	/**
-	 * Books the trip
+	 * Books route and displays confirmation
 	 */
 	public void book() {
 		checkPassenger();
@@ -65,6 +65,11 @@ public class Route {
 		StdOut.println("Trip booked from " + origin + " to " + destination + " for $" + cost);
 	}
 
+	/*
+	 * Returns the airport code as a string.
+	 * 
+	 * @return the airport name
+	 */
 	@Override
 	public String toString() {
 		return origin + " -> " + destination + " ($" + cost + ")";
