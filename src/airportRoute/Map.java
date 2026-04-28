@@ -1,10 +1,10 @@
 package airportRoute;
 
-import edu.princeton.cs.algs4.BreadthFirstDirectedPaths;
-import edu.princeton.cs.algs4.Digraph;
-import edu.princeton.cs.algs4.DijkstraSP;
-import edu.princeton.cs.algs4.DirectedEdge;
-import edu.princeton.cs.algs4.EdgeWeightedDigraph;
+import edu.princeton.cs.algs4.BreadthFirstPaths;
+import edu.princeton.cs.algs4.DijkstraUndirectedSP;
+import edu.princeton.cs.algs4.Edge;
+import edu.princeton.cs.algs4.EdgeWeightedGraph;
+import edu.princeton.cs.algs4.Graph;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.ST;
 import edu.princeton.cs.algs4.StdOut;
@@ -23,8 +23,8 @@ public class Map {
 	private ST<String, Integer> codeToIndex;
 	private String[] indexToCode;
 	private Airport[] airports;
-	private EdgeWeightedDigraph graph;
-	private Digraph directGraph;
+	private EdgeWeightedGraph ewGraph;
+	private Graph graph;
 
 	/**
 	 * Constructs the airport map from a route file
@@ -39,7 +39,6 @@ public class Map {
 
 		buildSymbolTable(fileName);
 		buildGraph(fileName);
-
 	}
 
 	/*
@@ -90,8 +89,8 @@ public class Map {
 	 * BFS (least connections).
 	 */
 	private void buildGraph(String fileName) {
-		graph = new EdgeWeightedDigraph(size);
-		directGraph = new Digraph(size);
+		ewGraph = new EdgeWeightedGraph(size);
+		graph = new Graph(size);
 
 		In in = new In(fileName);
 
@@ -113,8 +112,8 @@ public class Map {
 			int fromIndex = codeToIndex.get(from);
 			int toIndex = codeToIndex.get(to);
 
-			graph.addEdge(new DirectedEdge(fromIndex, toIndex, cost));
-			directGraph.addEdge(fromIndex, toIndex);
+			ewGraph.addEdge(new Edge(fromIndex, toIndex, cost));
+			graph.addEdge(fromIndex, toIndex);
 		}
 
 	}
@@ -170,8 +169,8 @@ public class Map {
 	 * 
 	 * @return the weighted directed graph
 	 */
-	public EdgeWeightedDigraph getGraph() {
-		return graph;
+	public EdgeWeightedGraph getGraph() {
+		return ewGraph;
 	}
 
 	/**
@@ -180,9 +179,8 @@ public class Map {
 	 * @param origin
 	 * @return the most direct path
 	 */
-	public BreadthFirstDirectedPaths mostDirect(int origin) {
-
-		return new BreadthFirstDirectedPaths(directGraph, origin);
+	public BreadthFirstPaths mostDirect(int origin) {
+		return new BreadthFirstPaths(graph, origin);
 	}
 
 	/**
@@ -192,8 +190,8 @@ public class Map {
 	 * @return the cheapest path
 	 */
 
-	public DijkstraSP cheapest(int origin) {
-		return new DijkstraSP(graph, origin);
+	public DijkstraUndirectedSP cheapest(int origin) {
+		return new DijkstraUndirectedSP(ewGraph, origin);
 	}
 
 	/**
