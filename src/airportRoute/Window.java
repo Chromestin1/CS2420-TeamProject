@@ -88,6 +88,7 @@ public class Window extends JFrame {
 		airportMap = new Map("src/airportRoute/Resources/Airports.txt");
 
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(149, 226, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -95,15 +96,6 @@ public class Window extends JFrame {
 		display();
 		loadAirports();
 		addEventHandlers();
-		/**
-		 * ControlPanel.display(contentPane);
-		 * 
-		 * MapWindow.display(contentPane);
-		 * 
-		 * Airport.display(contentPane);
-		 */
-
-		// loadAirports();
 
 	}
 
@@ -117,11 +109,12 @@ public class Window extends JFrame {
 		contentPane.add(southPanel, BorderLayout.SOUTH);
 
 		displayRoute = new JLabel("Welcome to Airport Route System!");
-		displayRoute.setFont(new Font("Tahoma", Font.PLAIN, 19));
+		displayRoute.setFont(new Font("Consolas", Font.BOLD | Font.ITALIC, 19));
 		displayRoute.setBackground(new Color(255, 255, 255));
 		southPanel.add(displayRoute);
 
 		JPanel controlPanel = new JPanel();
+		controlPanel.setBackground(new Color(0, 0, 255));
 		contentPane.add(controlPanel, BorderLayout.WEST);
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[] { 30, 0 };
@@ -134,6 +127,8 @@ public class Window extends JFrame {
 		ButtonGroup stuff = new ButtonGroup();
 
 		JLabel originText = new JLabel("Origin");
+		originText.setForeground(new Color(255, 255, 0));
+		originText.setFont(new Font("Consolas", Font.BOLD | Font.ITALIC, 15));
 		GridBagConstraints gbc_originText = new GridBagConstraints();
 		gbc_originText.insets = new Insets(0, 0, 5, 0);
 		gbc_originText.gridx = 0;
@@ -149,6 +144,8 @@ public class Window extends JFrame {
 		controlPanel.add(originComboBox, gbc_origin);
 
 		JLabel destinationText = new JLabel("Destination");
+		destinationText.setForeground(new Color(255, 255, 0));
+		destinationText.setFont(new Font("Consolas", Font.BOLD | Font.ITALIC, 15));
 		GridBagConstraints gbc_destinationText = new GridBagConstraints();
 		gbc_destinationText.insets = new Insets(0, 0, 5, 0);
 		gbc_destinationText.gridx = 0;
@@ -165,6 +162,9 @@ public class Window extends JFrame {
 
 		// Radio button 1
 		leastConnections = new JRadioButton("Least Connections");
+		leastConnections.setForeground(new Color(255, 255, 0));
+		leastConnections.setBackground(new Color(0, 0, 255));
+		leastConnections.setFont(new Font("Consolas", Font.BOLD | Font.ITALIC, 14));
 		leastConnections.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		leastConnections.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_leastConnections = new GridBagConstraints();
@@ -176,6 +176,9 @@ public class Window extends JFrame {
 
 		// Radio button 2
 		cheapest = new JRadioButton("Cheapest Route");
+		cheapest.setForeground(new Color(255, 255, 0));
+		cheapest.setBackground(new Color(0, 0, 255));
+		cheapest.setFont(new Font("Consolas", Font.BOLD | Font.ITALIC, 14));
 		cheapest.setHorizontalTextPosition(SwingConstants.RIGHT);
 		cheapest.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_cheapest = new GridBagConstraints();
@@ -187,6 +190,8 @@ public class Window extends JFrame {
 
 		// Button
 		btnBook = new JButton("Book");
+		btnBook.setBackground(new Color(192, 192, 192));
+		btnBook.setFont(new Font("Consolas", Font.BOLD | Font.ITALIC, 14));
 		btnBook.setEnabled(false);
 		GridBagConstraints gbc_btnBook = new GridBagConstraints();
 		gbc_btnBook.gridx = 0;
@@ -197,6 +202,7 @@ public class Window extends JFrame {
 		contentPane.add(windowMap, BorderLayout.CENTER);
 
 		JLabel unitedStates = new JLabel();
+		unitedStates.setBackground(new Color(157, 193, 253));
 		windowMap.setLayer(unitedStates, 100);
 		windowMap.moveToFront(unitedStates);
 		unitedStates.setBounds(5, 6, 893, 575);
@@ -206,25 +212,6 @@ public class Window extends JFrame {
 		unitedStates.setIcon((new ImageIcon(scaledImage)));
 
 		windowMap.moveToBack(unitedStates);
-
-		// These are used to figure out the coordinates for the label
-		/*
-		 * addAirportLabel("SLC", 252, 220); addAirportLabel("PVU", 253, 229);
-		 * addAirportLabel("OGD", 253, 200); addAirportLabel("SGU", 223, 270);
-		 * addAirportLabel("JFK", 735, 195); addAirportLabel("ATL", 615, 355);
-		 * 
-		 * SFO,75,285 BUR,100,345 MCO,650,450 IAD,690,275 DFW,440,390 RDU,675,330
-		 * LAS,190,330 LGU,250,210 CNY,275,255 ORD,575,235 SYR,705,180 DEN,365,270
-		 * IAH,490,420 CDC,230,260
-		 * 
-		 */
-
-		/*
-		 * TODO add more labels and find it's coordinates
-		 */
-		addAirportLabel("MSP", 495, 165);
-		addAirportLabel("SEA", 140, 75);
-		addAirportLabel("PHX", 225, 365);
 
 		String file = "src/airportRoute/Resources/AirportCoord.txt";
 		String delimiter = ",";
@@ -339,7 +326,7 @@ public class Window extends JFrame {
 		if (!bfs.hasPathTo(destinationIndex)) {
 			return null;
 		}
-		
+
 		Double cost = 0.0;
 		int pre = 0;
 		boolean first = true;
@@ -354,10 +341,9 @@ public class Window extends JFrame {
 			path.enqueue(el);
 			pre = el;
 		}
-		
-		
+
 		int[] airportNumber = new int[(path.size() * 2) - 2];
-		
+
 		int i = 0;
 		first = true;
 		for (int el : path) {
@@ -369,7 +355,7 @@ public class Window extends JFrame {
 			pre = el;
 			first = false;
 		}
-		
+
 		Airport[] airports = new Airport[airportNumber.length];
 		for (int j = 0; j < airportNumber.length; j++) {
 			airports[j] = airportMap.getAirport(airportNumber[j]);
@@ -412,19 +398,18 @@ public class Window extends JFrame {
 			}
 		}
 		int[] airportNumber = new int[path.size()];
-		
+
 		int i = 0;
 		for (int el : path) {
 			airportNumber[i] = el;
 			i++;
 		}
-		
+
 		Airport[] airports = new Airport[airportNumber.length];
 		for (int j = 0; j < airportNumber.length; j++) {
 			airports[j] = airportMap.getAirport(airportNumber[j]);
 		}
-		
-		
+
 		return new Route(airports, sp.distTo(destinationIndex));
 	}
 
@@ -473,7 +458,7 @@ public class Window extends JFrame {
 		airport = new JLabel("· " + code);
 		airport.setBounds(x, y, 36, 20);
 		airport.setForeground(Color.BLUE);
-		airport.setFont(new Font("Arial", Font.BOLD, 10));
+		airport.setFont(new Font("Arial", Font.BOLD, 11));
 		windowMap.add(airport);
 
 	}
