@@ -114,7 +114,8 @@ public class Window extends JFrame {
 		JPanel southPanel = new JPanel();
 		contentPane.add(southPanel, BorderLayout.SOUTH);
 
-		displayRoute = new JLabel("Display something");
+		displayRoute = new JLabel("Welcome to Airport Route System!");
+		displayRoute.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		displayRoute.setBackground(new Color(255, 255, 255));
 		southPanel.add(displayRoute);
 
