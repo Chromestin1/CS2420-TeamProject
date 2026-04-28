@@ -45,7 +45,7 @@ public class Map {
 	 * Reads airport codes from the file and assigns indices
 	 */
 	private void buildSymbolTable(String fileName) {
-		System.out.println("Reading file....");
+		StdOut.println("Reading file....");
 		In in = new In(fileName);
 
 		while (!in.isEmpty()) {
