@@ -72,7 +72,7 @@ public class Route {
 	 */
 	@Override
 	public String toString() {
-		return origin + " -> " + destination + " ($" + cost + ")";
+		return origin + " -> " + destination + " ($" + String.format("%.2f",cost) + ")";
 	}
 
 }
